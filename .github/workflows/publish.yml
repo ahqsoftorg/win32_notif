@@ -6,6 +6,9 @@ on:
       - master
     paths:
       - Cargo.toml
+      
+permissions: 
+  id-token: write
 
 jobs:
   publish:
@@ -19,7 +22,12 @@ jobs:
           rustup install stable
           rustup default stable
 
+      - name: Setup OIDC
+        uses: rust-lang/crates-io-auth-action@v1
+        id: auth
+
       - name: Publish
-        run: cargo publish
+        run: |
+          cargo publish --allow-dirty
         env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}

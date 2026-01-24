@@ -6,6 +6,9 @@ on:
       - master
     paths:
       - Cargo.toml
+      
+permissions: 
+  id-token: write
 
 jobs:
   publish:

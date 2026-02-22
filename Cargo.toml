@@ -1,12 +1,12 @@
 [package]
 name = "win32_notif"
-version = "0.10.6"
+version = "0.10.7"
 edition = "2021"
 description = "Wrapper around Windows UWP XAML (WinRT) Notification api"
 license = "MIT"
-repository = "https://github.com/AHQ-Softwares/win32_notif"
+repository = "https://github.com/ahqsoftorg/win32_notif"
 authors = [
-  "AHQ Softwares (@AHQ-Softwares)",
+  "AHQ Softwares (@ahqsoftorg)",
   "A. Chakraborty (@ahqsoftwares) <ahqsecret@gmail.com>",
 ]
 

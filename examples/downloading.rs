@@ -9,7 +9,7 @@ use win32_notif::{
 };
 
 pub fn main() {
-  let notifier = ToastsNotifier::new("Microsoft.Windows.Explorer").unwrap();
+  let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 
   let notification = NotificationBuilder::new()
     .with_scenario(Scenario::IncomingCall)

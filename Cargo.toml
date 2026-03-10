@@ -1,6 +1,6 @@
 [package]
 name = "win32_notif"
-version = "0.10.7"
+version = "0.11.0"
 edition = "2021"
 description = "Wrapper around Windows UWP XAML (WinRT) Notification api"
 license = "MIT"
@@ -28,6 +28,7 @@ windows = { version = "~0.62", features = [
   "Data_Xml_Dom",
   "Globalization",
   "Foundation_Collections",
+  "ApplicationModel",
 ] }
 windows-core = "~0.62"
 windows-registry = { version = "~0.6", optional = true }

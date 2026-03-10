@@ -8,7 +8,7 @@ fn main() {
   let path = absolute("./examples/ahq.png").unwrap();
   let path = path.to_string_lossy();
 
-  let notifier = ToastsNotifier::new("Microsoft.Windows.Explorer").unwrap();
+  let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 
   let notif = NotificationBuilder::new()
     .visual(

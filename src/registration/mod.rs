@@ -25,6 +25,18 @@ pub fn unregister_aumid<T: AsRef<str>>(aumid: T) -> Result<(), NotifError> {
   Ok(())
 }
 
+pub fn is_registered<T: AsRef<str>>(aumid: T) -> Result<bool, NotifError> {
+  let aumid = aumid.as_ref().trim();
+
+  if aumid.is_empty() {
+    return Err(NotifError::EmptyAUMID);
+  }
+
+  let hive = CURRENT_USER.open("Software\\Classes\\AppUserModelId")?;
+
+  Ok(hive.keys()?.into_iter().any(|x| x.as_str() == aumid))
+}
+
 pub struct RegistrationBuilder<'a> {
   app_id: &'a str,
   display_name: Option<&'a str>,
@@ -52,14 +64,21 @@ impl<'a> RegistrationBuilder<'a> {
   /// Creates a new [RegistrationBuilder]
   ///
   /// Your `aumid` is the AppUserModelId that windows uses to identify
-  pub fn new(aumid: &'a str) -> Self {
-    Self {
+  ///
+  /// # Error
+  /// This ONLY errors out if aumid is empty()
+  pub fn new(aumid: &'a str) -> Result<Self, NotifError> {
+    if aumid.is_empty() {
+      return Err(NotifError::EmptyAUMID);
+    }
+
+    Ok(Self {
       app_id: aumid.trim(),
       display_name: None,
       icon_path: None,
       com_activator_guid: None,
       icon_background: None,
-    }
+    })
   }
 
   methods! {

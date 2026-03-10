@@ -21,6 +21,7 @@ fn main() {
   let icon = icon.as_ref();
 
   RegistrationBuilder::new("com.ahqsoftwares.ahqlogo")
+    .expect("An empty AUMID was given")
     .with_display_name("Akshanabha Chakraborty")
     .with_icon_path(icon)
     .register()

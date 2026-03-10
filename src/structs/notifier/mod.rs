@@ -52,10 +52,6 @@ impl ToastsNotifier {
       return Err(NotifError::AUMIDRequired);
     }
 
-    if !unpackaged && app_id.is_some() {
-      return Err(NotifError::AUMIDGivenInPackaged);
-    }
-
     Self::new_inner(app_id, None)
   }
 

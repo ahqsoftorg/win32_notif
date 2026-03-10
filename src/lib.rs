@@ -70,7 +70,6 @@ macro_rules! from_impl {
 pub enum NotifError {
   WindowsCore(windows::core::Error),
   DurationTooLong,
-  AUMIDGivenInPackaged,
   AUMIDRequired,
   UnknownAndImpossible,
 }

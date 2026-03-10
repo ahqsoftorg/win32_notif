@@ -120,7 +120,7 @@ impl Text {
   }
 
   pub fn with_lang(mut self, lang: String) -> Self {
-    self.lang = Some(lang);
+    self.lang = Some(escape(lang).into());
     self
   }
 
@@ -138,11 +138,6 @@ impl Text {
   pub fn with_wrap(mut self, wrap: bool) -> Self {
     self.wrap = wrap;
     self
-  }
-
-  #[deprecated(since="0.10.2", note="Use [Self::with_wrap] instead")]
-  pub fn wrap(self, wrap: bool) -> Self {
-    self.with_wrap(wrap)
   }
 
   pub fn with_max_lines(mut self, max_lines: u32) -> Self {

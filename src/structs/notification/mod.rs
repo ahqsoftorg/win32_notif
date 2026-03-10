@@ -49,11 +49,6 @@ pub struct PartialNotification<'a> {
 }
 
 impl<'a> PartialNotification<'a> {
-  #[deprecated = "Use `upgrade` instead"]
-  pub fn cast(self, notifier: &'a ToastsNotifier) -> Notification<'a> {
-    self.upgrade(notifier)
-  }
-
   /// Converts to a Notification **but it will lost the handler tokens**
   pub fn upgrade(self, notifier: &'a ToastsNotifier) -> Notification<'a> {
     Notification {

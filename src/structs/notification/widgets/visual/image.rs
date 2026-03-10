@@ -103,7 +103,7 @@ impl Image {
   pub fn create(id: u64, src: &str) -> Self {
     Self::new(
       id,
-      escape(src).into(),
+      escape(src),
       None,
       false,
       Placement::None,
@@ -113,17 +113,17 @@ impl Image {
   }
 
   /// The `src` should be in the form of `file:///path/to/file`
-  /// 
+  ///
   /// Technically `https://` and `http://` too should work according to the
   /// C# Windows UWP Notifications, but we were not able to replicate that.
-  /// 
+  ///
   /// We still allow setting http or https including others of windows C# API
   ///
   /// If none of the above is provided, the `src` will be set to `file:///path/to/file`
-  pub fn new(
+  pub fn new<T: Into<String>>(
     id: u64,
-    src: String,
-    alt: Option<String>,
+    src: T,
+    alt: Option<&str>,
     add_image_query: bool,
     placement: Placement,
     crop: ImageCrop,
@@ -132,8 +132,8 @@ impl Image {
     Self {
       id,
       add_image_query,
-      src: guess_src(src),
-      alt,
+      src: guess_src(src.into()),
+      alt: alt.map(|x| escape(x).to_string()),
       placement,
       crop,
       align: AdaptiveImageAlign::Default,
@@ -153,8 +153,8 @@ impl Image {
     self
   }
 
-  pub fn with_alt<S: Into<String>>(mut self, alt: S) -> Self {
-    self.alt = Some(alt.into());
+  pub fn with_alt<S: AsRef<str>>(mut self, alt: S) -> Self {
+    self.alt = Some(escape(alt.as_ref()).into());
     self
   }
 
@@ -195,7 +195,7 @@ impl ToXML for Image {
         false => "".to_string(),
       },
       id = self.id,
-      src = format!("{}", self.src).replace("\\\\", "\\"),
+      src = self.src,
       alt = self
         .alt
         .clone()

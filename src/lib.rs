@@ -14,7 +14,7 @@
 //! };
 //!
 //! fn main() {
-//!   let notifier = ToastsNotifier::new("Microsoft.Windows.Explorer").unwrap();
+//!   let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 //!   let notif = NotificationBuilder::new()
 //!     .visual(Progress::new(
 //!       None,
@@ -70,6 +70,8 @@ macro_rules! from_impl {
 pub enum NotifError {
   WindowsCore(windows::core::Error),
   DurationTooLong,
+  AUMIDGivenInPackaged,
+  AUMIDRequired,
   UnknownAndImpossible,
 }
 

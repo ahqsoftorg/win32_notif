@@ -28,6 +28,7 @@ windows = { version = "~0.62", features = [
   "Data_Xml_Dom",
   "Globalization",
   "Foundation_Collections",
+  "ApplicationModel",
 ] }
 windows-core = "~0.62"
 windows-registry = { version = "~0.6", optional = true }

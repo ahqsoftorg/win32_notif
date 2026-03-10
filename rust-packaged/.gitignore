@@ -1,0 +1,6 @@
+target
+.winapp
+rust-packaged.msix
+dist
+# Development certificate
+devcert.pfx

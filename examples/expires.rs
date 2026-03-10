@@ -10,7 +10,7 @@ use win32_notif::{
 };
 
 fn main() {
-  let notifier = ToastsNotifier::new("Microsoft.Windows.Explorer").unwrap();
+  let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 
   let notif = NotificationBuilder::new()
     .audio(Audio::new(Src::Reminder, true, false))

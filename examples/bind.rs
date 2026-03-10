@@ -17,7 +17,7 @@ use win32_notif::{
 const _GUID: u128 = 23885548255760334674942869530154890271u128;
 
 pub fn main() {
-  let notifier = ToastsNotifier::new("com.ahqstore.app").unwrap();
+  let notifier = ToastsNotifier::new(Some("com.ahqstore.app")).unwrap();
 
   let mut argv = args();
 

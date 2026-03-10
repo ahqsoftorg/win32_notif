@@ -2,6 +2,7 @@ use std::{sync::Arc, thread};
 
 use windows::{
   core::HSTRING,
+  ApplicationModel::Package,
   Win32::{
     System::Com::{
       CoInitializeEx, CoRegisterClassObject, CLSCTX_LOCAL_SERVER, COINIT_APARTMENTTHREADED,
@@ -33,55 +34,85 @@ pub struct ToastsNotifier {
 }
 
 impl ToastsNotifier {
-  pub fn new<T: Into<String>>(app_id: T) -> Result<Self, NotifError> {
+  /// Creates a new [ToastNotifier] with an app_id
+  ///
+  /// `app_id` is to be passed only for **unpackaged** applications
+  ///
+  /// For packaged
+  /// ```rust
+  ///   let notifier = ToastsNotifier::new::<&str>(None).expect("Unable to create notifier");
+  /// ```
+  pub fn new<T>(app_id: Option<T>) -> Result<Self, NotifError>
+  where
+    T: Into<String>,
+  {
+    let unpackaged = Package::Current().is_err();
+
+    if unpackaged && app_id.is_none() {
+      return Err(NotifError::AUMIDRequired);
+    }
+
+    if !unpackaged && app_id.is_some() {
+      return Err(NotifError::AUMIDGivenInPackaged);
+    }
+
     Self::new_inner(app_id, None)
   }
 
   #[cfg(feature = "experimental")]
   pub unsafe fn new_with_guid<T: Into<String>>(
-    app_id: T,
+    app_id: Option<T>,
     guid: Option<u128>,
   ) -> Result<Self, NotifError> {
     Self::new_inner(app_id, guid)
   }
 
   pub(crate) fn new_inner<T: Into<String>>(
-    app_id: T,
+    app_id: Option<T>,
     guid: Option<u128>,
   ) -> Result<Self, NotifError> {
-    let app_id = app_id.into();
-    if let Some(guid) = guid {
-      let app_id = app_id.clone();
-      thread::spawn(move || {
-        // EXPERIMENTAL
-        // Basically setting up a whole XML Server like C# (Packaged Apps can do)
-        unsafe {
-          SetCurrentProcessExplicitAppUserModelID(&HSTRING::from(app_id.as_str())).unwrap();
+    let app_id = app_id.map(|x| x.into());
 
-          _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED).ok().unwrap();
+    if let Some(app_id) = &app_id {
+      if let Some(guid) = guid {
+        let app_id = app_id.clone();
+        thread::spawn(move || {
+          // EXPERIMENTAL
+          // Basically setting up a whole XML Server like C# (Packaged Apps can do)
+          unsafe {
+            SetCurrentProcessExplicitAppUserModelID(&HSTRING::from(app_id.as_str())).unwrap();
 
-          let factory: IUnknown = ToastActivationManager.into();
+            _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED).ok().unwrap();
 
-          CoRegisterClassObject(
-            &GUID::from_u128(guid),
-            &factory,
-            CLSCTX_LOCAL_SERVER,
-            REGCLS_MULTIPLEUSE,
-          )
-          .unwrap();
+            let factory: IUnknown = ToastActivationManager.into();
 
-          let mut msg = MSG::default();
-          while GetMessageW(&mut msg, None, 0, 0).into() {
-            println!("Got Msg");
-            _ = TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-          }
-        };
-      });
+            CoRegisterClassObject(
+              &GUID::from_u128(guid),
+              &factory,
+              CLSCTX_LOCAL_SERVER,
+              REGCLS_MULTIPLEUSE,
+            )
+            .unwrap();
+
+            let mut msg = MSG::default();
+            while GetMessageW(&mut msg, None, 0, 0).into() {
+              println!("Got Msg");
+              _ = TranslateMessage(&msg);
+              DispatchMessageW(&msg);
+            }
+          };
+        });
+      }
     }
 
-    let string: String = app_id.clone();
-    let string = string.into_boxed_str();
+    let Some(app_id) = app_id else {
+      return Ok(Self {
+        _inner: ToastNotificationManager::CreateToastNotifier()?,
+        app_id: Arc::new(Box::from("")),
+      });
+    };
+
+    let string = app_id.into_boxed_str();
 
     let id = HSTRING::from(string.as_ref());
     let _inner = ToastNotificationManager::CreateToastNotifierWithId(&id)?;

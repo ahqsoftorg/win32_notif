@@ -27,7 +27,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-// Abridged for `win32_notif`
+// ----------------
+// The original implementation has been heavily modified and trimmed for `win32_notif`
 
 use std::borrow::Cow;
 use std::fmt::{self, Write};

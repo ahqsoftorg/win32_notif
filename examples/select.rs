@@ -1,33 +1,34 @@
 use std::time::Duration;
 
-use win32_notif::{NotificationActivatedEventHandler, NotificationBuilder, ToastsNotifier, notification::{actions::{ActionButton, Input, action::ActivationType, input::Selection}, visual::Text}};
+use win32_notif::{
+  notification::{
+    actions::{action::ActivationType, input::Selection, ActionButton, Input},
+    visual::Text,
+  },
+  NotificationActivatedEventHandler, NotificationBuilder, ToastsNotifier,
+};
 // Input Selection Example
-
 
 fn main() {
   let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 
   let notification = NotificationBuilder::new()
-    .visual(
-      Text::create(0, "Enter your name")
-    )
-    .action(
-      Input::create_selection_input(
-        "0", 
-        "Name", 
-        "AHQ",
+    .visual(Text::create(0, "Enter your name"))
+    .action(Input::create_selection_input(
+      "0",
+      "Name",
+      "AHQ",
       vec![
-          Selection::new("1", "AHQ Novel"),
-          Selection::new("2", "AHQ Soft"),
-          Selection::new("3", "Wings of Fire")
-        ]
-      )
-    )
+        Selection::new("1", "AHQ Novel"),
+        Selection::new("2", "AHQ Soft"),
+        Selection::new("3", "Wings of Fire"),
+      ],
+    ))
     .action(
       ActionButton::create("Submit")
         .with_input_id("0")
         // Required or else it would go to file explorer
-        .with_activation_type(ActivationType::Foreground)
+        .with_activation_type(ActivationType::Foreground),
     )
     .on_activated(NotificationActivatedEventHandler::new(|_notif, data| {
       let data = data.unwrap();
@@ -44,8 +45,7 @@ fn main() {
     .build(0, &notifier, "01", "input")
     .unwrap();
 
-  notification.show()
-    .unwrap();
+  notification.show().unwrap();
 
   // App should be running
   loop {

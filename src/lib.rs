@@ -9,26 +9,46 @@
 //! # Example
 //! ```rust
 //! use win32_notif::{
-//!  notification::visual::progress::{Progress, ProgressValue},
-//!  string, NotificationBuilder, ToastsNotifier,
+//!  notification::{
+//!   actions::ActionButton,
+//!   group::{Group, SubGroup},
+//!   visual::{
+//!     text::{HintAlign, HintStyle},
+//!     Text,
+//!   },
+//!   Scenario,
+//!  },
+//!  NotificationBuilder, ToastsNotifier,
 //! };
 //!
-//! fn main() {
-//!   let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
-//!   let notif = NotificationBuilder::new()
-//!     .visual(Progress::new(
-//!       None,
-//!       string!("Downloading..."),
-//!       ProgressValue::BindTo("prog"),
-//!       None,
-//!     ))
-//!     // Use the newest data binding method
-//!     .value("prog", "0.3")
-//!     .build(1, &notifier, "a", "ahq")
-//!     .unwrap();
+//! pub fn main() {
+//!  let notifier = ToastsNotifier::new(Some("Microsoft.Windows.Explorer")).unwrap();
 //!
-//!   let _ = notif.show();
-//!   loop {}
+//!  let notification = NotificationBuilder::new()
+//!   .with_scenario(Scenario::IncomingCall)
+//!   .with_use_button_style(true)
+//!   .visual(
+//!     Group::new()
+//!      .with_subgroup(
+//!       SubGroup::new().with_visual(Text::create(0, "Hello World").with_style(HintStyle::Title)),
+//!     )
+//!     .with_subgroup(
+//!       SubGroup::new().with_visual(
+//!         Text::create(0, "Hello World x2")
+//!           .with_style(HintStyle::Header)
+//!           .with_align(HintAlign::Right),
+//!       ),
+//!     ),
+//!   )
+//!   .action(
+//!     ActionButton::create("Answer")
+//!     .with_tooltip("Answer")
+//!     .with_id("answer"),
+//!   )
+//!   .build(1, &notifier, "a", "ahq")
+//!   .expect("Error");
+//!
+//!   notification.show().expect("Not Sent");
 //! }
 //! ```
 

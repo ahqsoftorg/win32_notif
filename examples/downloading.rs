@@ -1,11 +1,11 @@
 use std::{thread::sleep, time::Duration};
 
 use win32_notif::{
-  NotificationBuilder, NotificationDataSet, ToastsNotifier, notification::{
-    AdaptiveText, Scenario, visual::{
-      Progress, Text, progress::ProgressValue
-    }
-  }
+  notification::{
+    visual::{progress::ProgressValue, Progress, Text},
+    AdaptiveText, Scenario,
+  },
+  NotificationBuilder, NotificationDataSet, ToastsNotifier,
 };
 
 pub fn main() {
@@ -14,12 +14,11 @@ pub fn main() {
   let notification = NotificationBuilder::new()
     .with_scenario(Scenario::IncomingCall)
     .with_use_button_style(true)
-    .visual(
-      Text::create_binded(1, "status")
-    )
-    .visual(
-      Progress::create(AdaptiveText::BindTo("typeof"), ProgressValue::BindTo("value"))
-    )
+    .visual(Text::create_binded(1, "status"))
+    .visual(Progress::create(
+      AdaptiveText::BindTo("typeof"),
+      ProgressValue::BindTo("value"),
+    ))
     .value("status", "AHQ Store")
     .value("typeof", "Downloading...")
     .value("value", "indeterminate")
@@ -30,7 +29,9 @@ pub fn main() {
 
   let data = NotificationDataSet::new().unwrap();
   for perc in 1..=100 {
-    data.insert("value", format!("{}", perc as f32 / 100.0).as_str()).unwrap();
+    data
+      .insert("value", format!("{}", perc as f32 / 100.0).as_str())
+      .unwrap();
 
     _ = notifier.update(&data, "ahq", "a");
 

@@ -7,14 +7,14 @@ use super::SubgroupXML;
 pub struct SubGroup {
   elements: Vec<Box<dyn TextOrImageElement>>,
   weight: u16,
-  text_stacking: Option<&'static str>
+  text_stacking: Option<&'static str>,
 }
 
 pub enum AdaptiveSubgroupTextStacking {
   Default,
   Top,
   Center,
-  Bottom
+  Bottom,
 }
 
 impl AdaptiveSubgroupTextStacking {
@@ -51,13 +51,20 @@ impl SubGroup {
   }
 
   pub fn new_from(elements: Vec<Box<dyn TextOrImageElement>>) -> Self {
-    Self { elements, ..Default::default() }
+    Self {
+      elements,
+      ..Default::default()
+    }
   }
 }
 
 impl Default for SubGroup {
   fn default() -> Self {
-    Self { elements: vec![], text_stacking: None, weight: 0 }
+    Self {
+      elements: vec![],
+      text_stacking: None,
+      weight: 0,
+    }
   }
 }
 
@@ -82,10 +89,9 @@ impl ToXML for SubGroup {
       } else {
         format!("hint-weight=\"{}\"", self.weight)
       },
-      stack = self.text_stacking.map_or_else(
-        || String::new(),
-        |s| format!("hint-textStacking=\"{}\"", s)
-      )
+      stack = self
+        .text_stacking
+        .map_or_else(|| String::new(), |s| format!("hint-textStacking=\"{}\"", s))
     )
   }
 }

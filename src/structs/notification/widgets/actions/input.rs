@@ -1,6 +1,6 @@
 use quick_xml::escape::escape;
 
-use crate::{ToXML, map, notification::ActionableXML};
+use crate::{map, notification::ActionableXML, ToXML};
 
 use super::ActionElement;
 
@@ -49,7 +49,12 @@ impl Input {
     }
   }
 
-  pub unsafe fn new_unchecked(id: String, title: String, r#type: InputType, place_holder: String) -> Self {
+  pub unsafe fn new_unchecked(
+    id: String,
+    title: String,
+    r#type: InputType,
+    place_holder: String,
+  ) -> Self {
     let (r#type, ch) = match r#type {
       InputType::Text => ("text", vec![]),
       InputType::Selection(ch) => ("selection", ch),
@@ -96,7 +101,7 @@ impl Selection {
   pub fn new(id: &str, content: &str) -> Self {
     Self {
       content: escape(content).into(),
-      id: escape(id).into()
+      id: escape(id).into(),
     }
   }
 }

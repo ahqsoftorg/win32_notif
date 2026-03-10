@@ -1,7 +1,13 @@
 use std::{path::absolute, thread::sleep, time::Duration};
 
 use win32_notif::{
-  NotificationBuilder, NotificationDataSet, notification::visual::{Image, Placement, Text, image::{AdaptiveImageAlign, ImageCrop}, text::HintStyle}, notifier::ToastsNotifier
+  notification::visual::{
+    image::{AdaptiveImageAlign, ImageCrop},
+    text::HintStyle,
+    Image, Placement, Text,
+  },
+  notifier::ToastsNotifier,
+  NotificationBuilder, NotificationDataSet,
 };
 
 fn main() {
@@ -15,27 +21,26 @@ fn main() {
       Text::create(0, "Welcome to \"win32_notif\"!! 👋")
         .with_align_center(true)
         .with_wrap(true)
-        .with_style(HintStyle::Title)
+        .with_style(HintStyle::Title),
     )
     .visual(
       Text::create_binded(1, "desc")
         .with_align_center(true)
         .with_wrap(true)
-        .with_style(HintStyle::Body)
+        .with_style(HintStyle::Body),
     )
     .visual(
       Image::create(2, format!("file:///{path}").as_str())
         .with_align(AdaptiveImageAlign::Default)
         .with_alt("AHQ Logo")
         .with_crop(ImageCrop::Circle)
-        .with_placement(Placement::AppLogoOverride)
+        .with_placement(Placement::AppLogoOverride),
     )
     .value("desc", "Data binding works as well {WOW}!")
     .build(0, &notifier, "01", "readme")
     .unwrap();
 
-  notif.show()
-    .unwrap();
+  notif.show().unwrap();
 
   sleep(Duration::from_secs(1));
 

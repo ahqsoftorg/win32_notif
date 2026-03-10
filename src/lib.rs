@@ -76,6 +76,9 @@ use std::{error::Error, fmt::Display};
 
 pub use structs::*;
 
+#[cfg(feature = "registration")]
+pub mod registration;
+
 macro_rules! from_impl {
   ($x:ty => $y:ident) => {
     impl From<$x> for NotifError {
@@ -92,6 +95,7 @@ pub enum NotifError {
   DurationTooLong,
   AUMIDRequired,
   UnknownAndImpossible,
+  EmptyAUMID,
 }
 
 impl Display for NotifError {

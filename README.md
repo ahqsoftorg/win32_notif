@@ -81,6 +81,7 @@ We've actually implemented a lot of the Notification APIs
 - Inputs
 - Selections
 - Visual
+- Usermode AUMID Registration
 - **_Idiomatic Rust Builder Style (with\_... methods)_**
 
 **_and a lot of other things... 🎉_**

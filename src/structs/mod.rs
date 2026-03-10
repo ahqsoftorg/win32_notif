@@ -3,6 +3,8 @@ pub mod handler;
 pub mod notification;
 pub mod notifier;
 
+pub(crate) mod utils;
+
 use std::time::Duration;
 
 pub use data::NotificationDataSet;

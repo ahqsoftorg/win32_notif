@@ -1,4 +1,4 @@
-use quick_xml::escape::escape;
+use crate::utils::escape::escape;
 
 use crate::{notification::ToastVisualableXML, ToXML};
 

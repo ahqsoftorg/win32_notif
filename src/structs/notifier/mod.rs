@@ -55,6 +55,16 @@ impl ToastsNotifier {
     Self::new_inner(app_id, None)
   }
 
+  pub fn new_packaged() -> Result<Self, NotifError> {
+    let unpackaged = Package::Current().is_err();
+
+    if unpackaged {
+      return Err(NotifError::AUMIDRequired);
+    }
+
+    Self::new_inner::<&str>(None, None)
+  }
+
   #[cfg(feature = "experimental")]
   pub unsafe fn new_with_guid<T: Into<String>>(
     app_id: Option<T>,

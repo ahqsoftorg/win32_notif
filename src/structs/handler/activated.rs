@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
 use windows::{
-  core::{Error, IInspectable, Interface, Ref, HSTRING},
   Foundation::{IReference, TypedEventHandler},
   UI::Notifications::{ToastActivatedEventArgs, ToastNotification},
+  core::{Error, HSTRING, IInspectable, Interface, Ref},
 };
 
 use crate::notification::PartialNotification;
@@ -11,7 +11,7 @@ use crate::notification::PartialNotification;
 #[derive(Debug)]
 pub struct ToastActivatedArgs {
   pub button_id: Option<String>,
-  pub user_input: Option<HashMap<String, String>>,
+  pub user_input: HashMap<String, String>,
 }
 
 impl ToastActivatedArgs {
@@ -42,7 +42,7 @@ impl ToastActivatedArgs {
 
     Self {
       button_id: argument,
-      user_input,
+      user_input: user_input.unwrap_or_default(),
     }
   }
 }
